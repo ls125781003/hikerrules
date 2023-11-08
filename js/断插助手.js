@@ -28,7 +28,7 @@ function init_duanPluin(){
         }else if(/更新/.test(input)){
             return $('确定更新插件吗?').confirm(()=>{
                 let base_search_js = 'hiker://files/rules/dzHouse/js/断插助手.js';
-                writeFile(base_search_js,fetch('http://hiker.nokia.press/hikerule/rulelist.json?id=6462&auth=4d8483cd-2728-5554-bcc7-5b206a5b5646'));
+                writeFile(base_search_js,fetch('https://gh-proxy.com/https://raw.githubusercontent.com/ls125781003/hikerrules/main/js/断插助手.js'));
                 refreshPage(true);
                 return 'toast://已更新'
             })
