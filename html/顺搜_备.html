@@ -8,7 +8,7 @@
 let t_begin =new Date().getTime()
 </script>
 <script src="https://cdn.bootcdn.net/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
-<script src="./js/zepto-module.js"></script>
+<script src="https://gh-proxy.com/https://raw.githubusercontent.com/ls125781003/hikerrules/main/js/zepto-module.js"></script>
 <!-- <script src="https://cdn.bootcdn.net/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script> -->
 <style type="text/css">
 * {
@@ -992,7 +992,7 @@ function 重启轮播() {
 //自动匹配图库并压缩
 function auto_match() {
 	fba.parseLazyRuleAsync($$$().lazyRule((SS_Pictures) => {
-		let file = require("./js/file.js")
+		let file = require("https://gh-proxy.com/https://raw.githubusercontent.com/ls125781003/hikerrules/main/js/file.js")
 		let folder = file.getFolder("/storage/emulated/0/Android/data/com.example.hikerview/files/Documents/SS_Pictures/")
 		let file_name = []
 		let To_base64 = []
@@ -1642,7 +1642,7 @@ var push_tips, push_url, push_img, push_rule;
 function update(Up) {
 	if (request(ln + 'ssts.json') != Up) {
 		if (push_tips) Alert("顺搜更新提示", push_tips);
-		var x5 = request('./html/顺搜.html');
+		var x5 = request('https://gh-proxy.com/https://raw.githubusercontent.com/ls125781003/hikerrules/main/html/顺搜.html');
 		//search_bg
 		if (x5.indexOf("search") > 0) {
 			fba.writeFile(ln + '顺搜.html', x5)
@@ -1653,7 +1653,7 @@ function update(Up) {
 			fba.writeFile(ln + 'ssts.json',Up);
 		}
 		$$$().x5LazyRule(() => {
-			deleteCache("./js/file.js")
+			deleteCache("https://gh-proxy.com/https://raw.githubusercontent.com/ls125781003/hikerrules/main/js/file.js")
 		})
 	}
 }
@@ -1681,7 +1681,7 @@ if (localStorage.getItem("原始高度")!=H5height) {
 fba.refreshX5Desc('list&&'+H5height);
 if (!fba.getVar('X5加载')) {
 	$('.pics_img').css({"animation":"淡入 0.9s linear forwards"});
-	requestAsync("./js/ssts.js",(key,html)=>{eval(html);})
+	requestAsync("https://gh-proxy.com/https://raw.githubusercontent.com/ls125781003/hikerrules/main/js/ssts.js",(key,html)=>{eval(html);})
 	if (localStorage.getItem("日") != Today && nowdays.getHours() > 5 || !localStorage.getItem('ONE_RADIO')) ONE_RADIO(nowDay);
 }
 fba.putVar('X5加载', '完成')
