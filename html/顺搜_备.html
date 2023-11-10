@@ -1642,7 +1642,7 @@ var push_tips, push_url, push_img, push_rule;
 function update(Up) {
 	if (request(ln + 'ssts.json') != Up) {
 		if (push_tips) Alert("顺搜更新提示", push_tips);
-		var x5 = request('https://gh-proxy.com/https://raw.githubusercontent.com/ls125781003/hikerrules/main/html/顺搜.html');
+		var x5 = request('https://gh-proxy.com/https://raw.githubusercontent.com/ls125781003/hikerrules/main/html/顺搜_备.html');
 		//search_bg
 		if (x5.indexOf("search") > 0) {
 			fba.writeFile(ln + '顺搜.html', x5)
