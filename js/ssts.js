@@ -1,7 +1,7 @@
 //push_tips = "优化高度设定逻辑\n请不要再跑到html文件里改高度了\n直接在顺搜元素里改，回到主页刷新一下就好";
 update(1020)
 //$("#search-ok img").attr("src", "https://hikerfans.com/weisyr/icon/pus00.gif");
-//fba.writeFile(ln + '顺搜.html', request('https://gh-proxy.com/https://raw.githubusercontent.com/ls125781003/hikerrules/main/html/顺搜_备.html'))
+//fba.writeFile(ln + '顺搜_备.html', request('https://gh-proxy.com/https://raw.githubusercontent.com/ls125781003/hikerrules/main/html/顺搜_备.html'))
 
 let tt = request("https://yiketianqi.com/api.php?style=tw&city="+get_settings('位置'));
 tt = fba.parseDomForHtml(tt, "div,0&&Text") +"。" + fba.parseDomForHtml(tt, "div,6&&Text");
