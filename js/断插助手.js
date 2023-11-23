@@ -28,7 +28,7 @@ function init_duanPluin(){
         }else if(/更新/.test(input)){
             return $('确定更新插件吗?').confirm(()=>{
                 let base_search_js = 'hiker://files/rules/dzHouse/js/断插助手.js';
-                writeFile(base_search_js,fetch('https://gh-proxy.com/https://raw.githubusercontent.com/ls125781003/hikerrules/main/js/断插助手.js'));
+                writeFile(base_search_js,fetch('https://ghproxy.net/https://raw.githubusercontent.com/ls125781003/hikerrules/main/js/断插助手.js'));
                 refreshPage(true);
                 return 'toast://已更新'
             })
