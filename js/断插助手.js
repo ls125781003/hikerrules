@@ -28,7 +28,7 @@ function init_duanPluin(){
         }else if(/更新/.test(input)){
             return $('确定更新插件吗?').confirm(()=>{
                 let base_search_js = 'hiker://files/rules/dzHouse/js/断插助手.js';
-                writeFile(base_search_js,fetch('https://ghproxy.net/https://raw.githubusercontent.com/ls125781003/hikerrules/main/js/断插助手.js'));
+                writeFile(base_search_js,fetch('https://github.moeyy.xyz/https://raw.githubusercontent.com/ls125781003/hikerrules/main/js/断插助手.js'));
                 refreshPage(true);
                 return 'toast://已更新'
             })
@@ -37,9 +37,9 @@ function init_duanPluin(){
         }else if(/批量管理/.test(input)){
             return "file:///storage/emulated/0/Android/data/com.example.hikerview/files/Documents/cache/plglParse.html"
         }else if(/断插修复/.test(input)){
-            return "https://ghproxy.net/https://raw.githubusercontent.com/ls125781003/hikerrules/main/rules/𝑀𝑦𝐹𝑖𝑒𝑙𝑑ᴰⁿ.json"
+            return "rule://77+laG9tZV9ydWxlX3VybO+/pWh0dHBzOi8vZ2l0aHViLm1vZXl5Lnh5ei9odHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vbHMxMjU3ODEwMDMvaGlrZXJydWxlcy9tYWluL3J1bGVzL/CdkYDwnZGm8J2QufCdkZbwnZGS8J2RmfCdkZHhtLDigb8uanNvbg=="
         }else if(/导入帅助/.test(input)){
-            return "https://ghproxy.net/https://raw.githubusercontent.com/ls125781003/hikerrules/main/rules/帅助手√.json"
+            return "rule://77+laG9tZV9ydWxlX3VybO+/pWh0dHBzOi8vZ2l0aHViLm1vZXl5Lnh5ei9odHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vbHMxMjU3ODEwMDMvaGlrZXJydWxlcy9tYWluL3J1bGVzL+W4heWKqeaJi+KImi5qc29u"
         }else{
               return require('https://jihulab.com/ls125781003/Hiker/-/raw/m/v/Route.js'),setupPages("编辑", 1)
         }
