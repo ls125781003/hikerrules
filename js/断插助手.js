@@ -37,9 +37,9 @@ function init_duanPluin(){
         }else if(/批量管理/.test(input)){
             return "file:///storage/emulated/0/Android/data/com.example.hikerview/files/Documents/cache/plglParse.html"
         }else if(/断插修复/.test(input)){
-            return "rule://77+laG9tZV9ydWxlX3VybO+/pWh0dHBzOi8vZ2hwcm94eS5uZXQvaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2xzMTI1NzgxMDAzL2hpa2VycnVsZXMvbWFpbi9ydWxlcy/wnZGA8J2RpvCdkLnwnZGW8J2RkvCdkZnwnZGR4bSw4oG/Lmpzb24="
+            return "https://ghproxy.net/https://raw.githubusercontent.com/ls125781003/hikerrules/main/rules/𝑀𝑦𝐹𝑖𝑒𝑙𝑑ᴰⁿ.json"
         }else if(/导入帅助/.test(input)){
-            return "rule://77+laG9tZV9ydWxlX3VybO+/pWh0dHBzOi8vZ2hwcm94eS5uZXQvaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2xzMTI1NzgxMDAzL2hpa2VycnVsZXMvbWFpbi9ydWxlcy/luIXliqnmiYviiJouanNvbg=="
+            return "https://ghproxy.net/https://raw.githubusercontent.com/ls125781003/hikerrules/main/rules/帅助手√.json"
         }else{
               return require('https://jihulab.com/ls125781003/Hiker/-/raw/m/v/Route.js'),setupPages("编辑", 1)
         }
