@@ -24,7 +24,7 @@ function init_duanPluin(){
             }
         }
         if(/配置选择/.test(input)){
-            return require('https://jihulab.com/ls125781003/Hiker/-/raw/m/v/Route.js'),setupPages("设置", 1)
+            return require('https://agit.ai/ls125781003/Hiker/raw/branch/m/v/Route.js'),setupPages("设置", 1)
         }else if(/更新/.test(input)){
             return $('确定更新插件吗?').confirm(()=>{
                 let base_search_js = 'hiker://files/rules/dzHouse/js/断插助手.js';
@@ -41,7 +41,7 @@ function init_duanPluin(){
         }else if(/导入帅助/.test(input)){
             return "rule://77+laG9tZV9ydWxlX3VybO+/pWh0dHBzOi8vZ2l0aHViLm1vZXl5Lnh5ei9odHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vbHMxMjU3ODEwMDMvaGlrZXJydWxlcy9tYWluL3J1bGVzL+W4heWKqeaJi+KImi5qc29u"
         }else{
-              return require('https://jihulab.com/ls125781003/Hiker/-/raw/m/v/Route.js'),setupPages("编辑", 1)
+              return require('https://agit.ai/ls125781003/Hiker/raw/branch/m/v/Route.js'),setupPages("编辑", 1)
         }
     })
 }
