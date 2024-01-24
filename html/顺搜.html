@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-<title>顺搜_by顺承天意(2023.12.17)</title>
+<title>顺搜_by顺承天意(2024.1.24)</title>
 <script type="text/javascript">
 let t_begin =new Date().getTime()
 </script>
@@ -125,13 +125,12 @@ button:active,
 @keyframes slideDownReturn{0%{opacity:0;transform:scale(.2) translateY(300%);transform-origin:50% 100%}to{opacity:1;transform:scale(1) translate(0);transform-origin:50% 100%}}
 @keyframes spaceOutDown{0%{opacity:1;transform:scale(1) translate(0);transform-origin:50% 100%}to{opacity:0;transform:scale(.2) translateY(300%);transform-origin:50% 100%}}
 .movie {
-	height: 100%;
-	width: 100%;
 	top: 0;
+	bottom: 0;
 	left: 0;
 	right: 0;
 	margin:0 auto;
-	border-radius:	18px 18px 0 0;
+	border-radius: 18px 18px 0 0;
 	position: absolute;
 	overflow: hidden;
 	z-index: 0;
@@ -628,8 +627,6 @@ button:first-child {
 .weather {
 	position: absolute;
 	display: none;
-	height: 30px;
-	left: 2%;
 }
 .wv-lt-refresh, #he-plugin-standard {
 	display: none;
@@ -641,9 +638,7 @@ button:first-child {
 	position: absolute;
 	align-items: center;
 	display: flex;
-	top: 0;
-	bottom: 0;
-	margin:0 auto;
+	top: 20px;
 }
 #weather_info img {
 	width: 20px;
@@ -659,6 +654,32 @@ button:first-child {
 	color: #fff;
 	font-size: 98%;
 	text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+}
+#wv_1 {
+	position: absolute;
+	display: none;
+	top: 130px;
+	bottom: 0;
+	z-index: 1;
+	width: 100%;
+}
+#wv_2 {
+	position: absolute;
+	display: none;
+	top: 0;
+	left: 50px;
+	z-index: 2;
+	width: 80px;
+	height: 30px;
+}
+#wv_3 {
+	position: absolute;
+	display: none;
+	bottom: 23px;
+	left: 30px;
+	z-index: 3;
+	width: 90px;
+	height: 20px;
 }
 </style>
 </head>
@@ -720,7 +741,7 @@ button:first-child {
 		<form class="search bar">
 			<input type="text" autocomplete="off" list="inputList" class="input" id="search-input" placeholder="搜点好片 . . ." onkeydown="if(event.keyCode==13){up()}">
 			<div id="open_set"></div>
-			<button type="submit" id="search-ok"><img src="https://hikerfans.com/weisyr/icon/search.svg"/></button>
+			<button type="submit" id="search-ok"><img src="https://hikerfans.com/weisyr/icon/scan.svg"/></button>
 			<button id="input-clear"><p>×</p></button>
 		</form>
 	</div>
@@ -740,6 +761,9 @@ button:first-child {
 		<img>
 		<a></a>
 	</div>
+	<div id='wv_1'></div>
+	<div id='wv_2'></div>
+	<div id='wv_3'></div>
 	<div id="he-plugin-standard"></div>
 </div>
 </body>
@@ -1204,6 +1228,7 @@ $("#search-input").bind("keyup",function(event) {
 	搜索建议(value);
 	$("#input-clear").show();
 	$("#lishiList ").hide();
+	$("#search-ok img").attr("src", 'https://hikerfans.com/weisyr/icon/search.svg');
 })
 $("#suggestList").delegate('li', 'click', function (e) {
 	let target = e.target || e.srcElement;
@@ -1299,6 +1324,7 @@ $("#lishiList").delegate('li p', 'singleTap doubleTap longTap', function (e) {
 	if (e.type=="singleTap") {
 		$("#search-input")[0].value = input;
 		$("#input-clear").show();
+		$("#search-ok img").attr("src", 'https://hikerfans.com/weisyr/icon/search.svg');
 	} else if(e.type=="longTap") {
 		搜索记录 ("删除", input)
 	} else {
@@ -1309,9 +1335,22 @@ $("#lishiList").delegate('li p', 'singleTap doubleTap longTap', function (e) {
 })
 $("#search-ok").click(function () {
 	let input = document.getElementById("search-input").value || name_load;
-	搜索(input)
-	搜索记录 ("增加", input)
-	CLOSE($(this).attr('id'))
+	if (input==name_load) {
+		fba.parseLazyRule($$$().lazyRule(() => {
+			startQRScanPage()
+		}))
+	} else {
+		搜索(input)
+		搜索记录 ("增加", input)
+		CLOSE($(this).attr('id'))
+	}
+})
+$("#search-ok").longTap(function () {
+	if(!document.getElementById("search-input").value) {
+		搜索(name_load)
+		搜索记录 ("增加", name_load)
+		CLOSE($(this).attr('id'))
+	}
 })
 $("#input-clear").longTap(function(){
 	confirmAsync("清空记录", "将删除所有搜索记录", () => {
@@ -1366,6 +1405,7 @@ function CLOSE(id) {
 	if (id=="input-clear") {
 		$("#search-input").val("");
 		$("#input-clear").hide();
+		$("#search-ok img").attr("src", 'https://hikerfans.com/weisyr/icon/scan.svg');
 	}
 	$(".CLOSE").hide();
 	$("#open_set,.weather").show("200");
@@ -1384,8 +1424,8 @@ function CLOSE(id) {
 		$(".ONE_radio,.weather").fadeToggle("200");
 		$(".ONE_radio p").fadeIn("600");
 		if ($(".ONE_radio").height()> 150 ) {
-		    $(".movie").css({"animation":"close .3s linear forwards"});
-		    $(".ONE_radio").css({"display":"block","animation":"slideDownReturn0 .2s linear forwards"});
+			$(".movie").css({"animation":"close .3s linear forwards"});
+			$(".ONE_radio").css({"display":"block","animation":"slideDownReturn0 .2s linear forwards"});
 		}
 	}
 	input_state=0
@@ -1693,7 +1733,7 @@ $(function(){
 		"background": "1",
 		"dataColor": "FFFFFF",
 		"borderRadius": "15",
-		"city": get_settings('位置') || '北京',
+		//"city": get_settings('位置') || '北京',
 		"key": "39d6eac175ed46fe91cdb4738786b652"
 	  }
 	}
@@ -1706,10 +1746,10 @@ $(function(){
 	})
 })
 $(".weather").click(() => {
-	$('#he-plugin-standard').css({"display":"block","animation":"slideDownReturn0 .25s linear"});
+	$('#he-plugin-standard, #wv_1, #wv_2, #wv_3').css({"display":"block","animation":"slideDownReturn0 .25s linear"});
 	$(".movie").css({"animation":"close .3s linear forwards"});
 })
-$(".weather").on('click', ".wv-lt-location", () => {
+$(".weather").on('click', "#wv_2", () => {
 	let city = get_settings('位置') || '北京';
 	city = prompt('输入位置', city);
 	if (city != null && city != '') {
@@ -1717,16 +1757,17 @@ $(".weather").on('click', ".wv-lt-location", () => {
 		fba.refreshPage(true);
 	}
 })
-$(".weather").on('click', ".wv-n-h-now-rain", () => {
+$(".weather").on('click', "#wv_3", () => {
 	open_x5("https://caiyunapp.com/wx_share/", '#fullTheme#', '天气雷达');
 })
-$(".weather").on('click', ".wv-v-h-col-left, .wv-v-h-col-right", () => {
+$(".weather").on('click', "#wv_1", () => {
 	$('#he-plugin-standard').css({"animation":"close .3s ease-out"});
 	setTimeout(function () {
-		$("#he-plugin-standard").hide();
+		$("#he-plugin-standard, #wv_1, #wv_2, #wv_3").hide();
 	},300);
 	$(".movie").css({"animation":"slideDownReturn0 .4s ease-out"});
 })
+
 fba.log("顺搜渲染耗时: " + (new Date().getTime() - t_begin));
 </script>
 </html>
