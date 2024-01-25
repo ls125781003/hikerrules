@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-<title>顺搜_by顺承天意(2024.1.24)</title>
+<title>顺搜_by顺承天意(2024.1.25)</title>
 <script type="text/javascript">
 let t_begin =new Date().getTime()
 </script>
@@ -1258,8 +1258,8 @@ function 搜索(e){
 	}
 }
 function 搜索记录 (way, input) {
-	let lishi = request(ln+'顺搜_History.json') || "[]";
-	lishi = JSON.parse(lishi);
+	let lishi_0 = request(ln+'顺搜_History.json') || "[]";
+	lishi = JSON.parse(lishi_0);
 	let ccc = lishi.indexOf(input);
 	if (way == "增加") {
 		if(ccc >-1) lishi.splice(ccc,1);
@@ -1277,7 +1277,8 @@ function 搜索记录 (way, input) {
 			History += "<li><p>"+lishi[i].substring(0, 18)+"</p></li>";
 		}
 		$("#lishiList").html(History);
-		fba.writeFile(ln+'顺搜_History.json',JSON.stringify(lishi));
+		let lishi_1=JSON.stringify(lishi);
+		if(lishi_1!=lishi_0) fba.writeFile(ln+'顺搜_History.json',lishi_1);
 	}
 	Refresh_lishi()
 }
@@ -1334,7 +1335,7 @@ $("#lishiList").delegate('li p', 'singleTap doubleTap longTap', function (e) {
 	}
 })
 $("#search-ok").click(function () {
-	let input = document.getElementById("search-input").value || name_load;
+	var input = document.getElementById("search-input").value || name_load;
 	if (input==name_load) {
 		fba.parseLazyRule($$$().lazyRule(() => {
 			startQRScanPage()
@@ -1346,10 +1347,10 @@ $("#search-ok").click(function () {
 	}
 })
 $("#search-ok").longTap(function () {
-	if(!document.getElementById("search-input").value) {
+	var input = document.getElementById("search-input").value;
+	if(!input) {
 		搜索(name_load)
 		搜索记录 ("增加", name_load)
-		CLOSE($(this).attr('id'))
 	}
 })
 $("#input-clear").longTap(function(){
@@ -1675,7 +1676,7 @@ $("#ONE_bg").click(function () {
 		$(".movie").css({"animation":"slideDownReturn0 .4s ease-out"});
 	}
 })
-var push_tips, push_url, push_img, push_rule;
+var push_tips, push_img, push_url, push_rule;
 function update(Up) {
 	if (request(ln + 'ssts.json') != Up) {
 		if (push_tips) Alert("顺搜更新提示", push_tips);
@@ -1701,6 +1702,7 @@ function push(Day) {
 		}
 		set_settings("push_img", push_img);
 		if (push_url) $(".switch").click(function() {
+			//push_rule = `js:var d=[];d.push({desc:'auto&&float',col_type:'x5_webview_single',url:'${push_url}'});setResult(d)`;
 			fba.open(JSON.stringify({title:" ", url:"#fullTheme##noHistory#hiker://empty", findRule: push_rule}))
 		})
 	} else {
