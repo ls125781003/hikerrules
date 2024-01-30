@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-<title>顺搜_by顺承天意(2024.1.28)</title>
+<title>顺搜_by顺承天意(2024.1.30)</title>
 <script type="text/javascript">
 let t_begin =new Date().getTime()
 </script>
@@ -486,11 +486,6 @@ button:first-child {
 .s2 {
 	box-shadow: rgba(0, 0, 0, 0.4) 0 2px 4px, rgba(0, 0, 0, 0.3) 0 7px 13px -3px, rgba(0, 0, 0, 0.2) 0 -3px 0 inset;
 }
-.s1 img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-}
 #open_function {
 	position: absolute;
 	z-index: 16;
@@ -686,7 +681,7 @@ button:first-child {
 	width: 100%;
 	left: 0;
 	position: absolute;
-	opacity: .6;
+	opacity: .8;
 }
 </style>
 </head>
@@ -743,7 +738,6 @@ button:first-child {
 	</div>
 	<div class="function s1" id="s1">
 		<canvas id="gradienter" width="640" height="560"></canvas>
-		<!-- <img src='https://pp.myapp.com/ma_icon/0/icon_52694068_1686816151/256'/> -->
 	</div>
 	<div class="function s2" id="s2"></div>
 	<div id="search_box">
@@ -800,6 +794,25 @@ let name_load = '欢迎使用顺搜';
 let ln = 'hiker://files/rules/dzHouse/html/';
 let SS_Pictures = 'file:///storage/emulated/0/Android/data/com.example.hikerview/files/Documents/SS_Pictures/';
 let Path = 'file:///storage/emulated/0/Android/data/com.example.hikerview/files/Documents/cache/';
+let H5height = fba.getVar(程序名+'顺搜高度') || 'video';
+if (localStorage.getItem(程序名+"原始高度")!=H5height) {
+	localStorage.setItem(程序名+"原始高度", H5height);
+	localStorage.setItem(程序名+"顺搜高度", H5height);
+	H5height = H5height;
+} else {
+	H5height = localStorage.getItem(程序名+"顺搜高度") || H5height;
+}
+function 响应高度() {
+	let MaxH = window.screen.height-133;
+	let ShowH = document.documentElement.clientHeight;
+	if (MaxH> ShowH) {
+		fba.refreshX5Desc('list&&'+MaxH);
+		localStorage.setItem(程序名+"顺搜高度", MaxH);
+	} else {
+		fba.refreshX5Desc('list&&'+fba.getVar(程序名+'顺搜高度'));
+		localStorage.setItem(程序名+"顺搜高度", fba.getVar(程序名+'顺搜高度'));
+	}
+}
 function get_settings(key, value) {
 	let settings = request(ln + '顺搜_settings.json') || '{}';
 	settings = JSON.parse(settings);
@@ -1083,7 +1096,7 @@ function 加载图片(SRC) {
 			default_img(默认图)
 		}
 	} else {
-		$(".pics_img").attr('src', 海报图 + '?t=' + new Date());
+		$(".one").attr('src', 海报图 + '?t=' + new Date());
 		default_img(海报图)
 	}
 }
@@ -1295,6 +1308,7 @@ function 搜索记录 (way, input) {
 function 大图事件() {
 $("div").delegate('.switch', 'singleTap doubleTap longTap', function (e) {
 	if(e.type=="longTap") {
+		navigator.vibrate([5]);
 		let img = localStorage.getItem("大图地址");
 		if (启用轮播 == true && 启用定义 == false) {
 			轮播图组("删除", img)
@@ -1316,15 +1330,7 @@ $("div").delegate('.switch', 'singleTap doubleTap longTap', function (e) {
 		if (启用定义 == true && 定义图.indexOf("http") == 0) picurl = 网图缓存 + '?t=' + new Date();
 		fba.showPic(picurl)
 	} else if (e.type=="doubleTap") {
-		let MaxH = window.screen.height-133;
-		let ShowH = document.documentElement.clientHeight;
-		if (MaxH> ShowH) {
-			fba.refreshX5Desc('list&&'+MaxH);
-			localStorage.setItem("顺搜高度", MaxH);
-		} else {
-			fba.refreshX5Desc('list&&'+fba.getVar('顺搜高度'));
-			localStorage.setItem("顺搜高度", fba.getVar('顺搜高度'));
-		}
+		响应高度()
 	}
 })
 }
@@ -1337,6 +1343,7 @@ $("#lishiList").delegate('li p', 'singleTap doubleTap longTap', function (e) {
 		$("#input-clear").show();
 		$("#search-ok img").attr("src", 'https://hikerfans.com/weisyr/icon/search.svg');
 	} else if(e.type=="longTap") {
+		navigator.vibrate([5]);
 		搜索记录 ("删除", input)
 	} else {
 		搜索(input)
@@ -1357,6 +1364,7 @@ $("#search-ok").click(function () {
 	}
 })
 $("#search-ok").longTap(function () {
+	navigator.vibrate([5]);
 	var input = document.getElementById("search-input").value;
 	if(!input) {
 		搜索(name_load)
@@ -1364,6 +1372,7 @@ $("#search-ok").longTap(function () {
 	}
 })
 $("#input-clear").longTap(function(){
+	navigator.vibrate([5]);
 	confirmAsync("清空记录", "将删除所有搜索记录", () => {
 		fba.writeFile(ln+'顺搜_History.json',"");
 		CLOSE($(this).attr('id'))
@@ -1397,6 +1406,7 @@ function OPEN(id) {
 			$('#lishiList').hide();
 		},300)
 		if ($('.function').is(':hidden')) {
+			navigator.vibrate([5]);
 			eval(request(ln + 'plug/level.js'));
 			日历()
 			$('.function').css({"display":"block","animation":"slideDownReturn .4s ease"});
@@ -1432,7 +1442,7 @@ function CLOSE(id) {
 	},300)
 	if (input_state==1 && 轮播_state==1) 重启轮播()
 	if (id=="search_mask" && input_state==0) {
-		oneRadio_load()
+		oneRadio_load();
 		$(".ONE_radio,.weather").fadeToggle("200");
 		$(".ONE_radio p").fadeIn("600");
 		if ($(".ONE_radio").height()> 150 ) {
@@ -1451,6 +1461,7 @@ $("#input-clear, #search_mask, .CLOSE").click(function() {
 })
 //设置
 $("#save").click(() =>{
+	navigator.vibrate([5]);
 	set_settings(程序名+"自定义搜索",  $("#sousuo").val());
 	let pic_val=$("#tupian").val();
 	set_settings(程序名+"自定义图片",  pic_val);
@@ -1462,7 +1473,14 @@ $("#save").click(() =>{
 	set_settings(程序名+"启用轮播",  启用轮播);
 	加载图片(pic_val)
 })
+if(程序名=='青豆') {
+	$("#open_set").longTap(function(){
+		navigator.vibrate([5]);
+		fba.open(JSON.stringify({title:"设置", url:"hiker://page/settingPage#noRefresh##noHistory##noRecordHistory#?rule=青豆"}))
+	})
+}
 $("#open_set").click(function() {
+	navigator.vibrate([5]);
 	fba.parseLazyRuleAsync($$$().lazyRule(() => {
 		let app_name = getLastRules(40).map(e=>{
 			return e.title
@@ -1578,11 +1596,14 @@ function 日历() {
 	document.getElementById('dayName').innerHTML = dayName;
 	document.getElementById('dayNumber').innerHTML = dayNumber;
 	let colorStr = "";
+	let colorStr2 = "";
 	let randomArr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
 	for (let i = 0; i < 6; i++) {
 		colorStr += randomArr[Math.ceil(Math.random() * (14 - 0) + 0)];
+		colorStr2 += randomArr[Math.ceil(Math.random() * (8 - 0) + 0)];
 	}
-	$("#today, #s1").css({"background":'#'  + colorStr });
+	$("#today").css({"background":'#'  + colorStr });
+	$("#s1").css({"background":'#'  + colorStr2 });
 }
 
 function open_x5(Url, col, title) {
@@ -1599,11 +1620,13 @@ function H5Mark(t, u) {
 	}
 }
 $("#dayNumber, #month, #s2").click(function () {
+	navigator.vibrate([5]);
 	if($(this).attr('id')=="dayNumber") open_x5(get_settings('功能1') || 'https://m.rili.com.cn/', "#fullTheme#", ' ');
 	if($(this).attr('id')=="month") open_x5(get_settings('功能2') || 'https://m.xingzuo.com/shierxingzuo/', '#fullTheme#', ' ');
 	if($(this).attr('id')=="s2") open_x5(get_settings('功能3') || "https://t.xxgeek.com/tools/mmvod/m.php", "#gameTheme#", " ");
 })
 $("#dayNumber, #month, #s2").longTap(function () {
+	navigator.vibrate([5]);
 	if($(this).attr('id')=="dayNumber") H5Mark("功能1", "https://m.rili.com.cn/");
 	if($(this).attr('id')=="month") H5Mark("功能2", "https://m.xingzuo.com/shierxingzuo/");
 	if($(this).attr('id')=="s2") H5Mark("功能3", "https://t.xxgeek.com/tools/mmvod/m.php");
@@ -1720,21 +1743,12 @@ function push(Day) {
 		set_settings("push_img", "");
 	}
 }
-let H5height = fba.getVar('顺搜高度') || 'video';
-if (localStorage.getItem("原始高度")!=H5height) {
-	localStorage.setItem("原始高度", H5height);
-	localStorage.setItem("顺搜高度", H5height);
-	H5height = H5height;
-} else {
-	H5height = localStorage.getItem("顺搜高度") || H5height;
-}
-fba.refreshX5Desc('list&&'+H5height);
 if (!fba.getVar('X5加载')) {
 	$('.pics_img').css({"animation":"淡入 0.9s linear forwards"});
 	requestAsync("https://hikerfans.com/weisyr/plug/ssts.js",(key,html)=>{eval(html);})
 	if (localStorage.getItem("日") != Today && nowdays.getHours() > 5 || !localStorage.getItem('ONE_RADIO')) ONE_RADIO(nowDay);
+	fba.putVar('X5加载', '完成')
 }
-fba.putVar('X5加载', '完成')
 try{requestAsync(get_settings(程序名+"注入JS"),(key,html)=>{eval(html);})} catch(e){fba.log("注入的JS有错")}
 async function weather(){
 	let H5width = window.screen.width;
@@ -1742,7 +1756,7 @@ async function weather(){
 		"CONFIG": {
 		"layout": "1",
 		"width": H5width-(H5width/100*4),
-		"height": (fba.getVar('顺搜高度') || document.documentElement.clientHeight) -47,
+		"height": (fba.getVar(程序名+'顺搜高度') || document.documentElement.clientHeight) -47,
 		"background": "1",
 		"dataColor": "FFFFFF",
 		"borderRadius": "15",
@@ -1796,5 +1810,6 @@ async function file_load() {
 }
 file_load()
 fba.log("顺搜渲染耗时: " + (new Date().getTime() - t_begin));
+fba.refreshX5Desc('list&&'+H5height);
 </script>
 </html>
