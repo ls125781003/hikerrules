@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-<title>顺搜_by顺承天意(2024.1.30)</title>
+<title>顺搜_by顺承天意(2024.2.1)</title>
 <script type="text/javascript">
 let t_begin =new Date().getTime()
 </script>
@@ -39,7 +39,7 @@ body {
 .switch, .CLOSE {
 	position: absolute;
 	z-index: 1;
-	background: rgba(0, 0, 0, 0.);
+	background-color: transparent;
 	width: 100%;
 	bottom: 90px;
 	top: 0;
@@ -59,13 +59,13 @@ button:active,
 #today:active,
 #input-clear:active {
 	animation: click 0.8s ease-in-out infinite;
-	background: rgba(0, 0, 0, 0.3);
+	background-color: rgba(0, 0, 0, 0.3);
 }
 #set_pic:active {
 	border-radius:	8px;
 }
 #input-clear:active {
-	background: rgba(255, 0, 0, .5);
+	background-color: rgba(255, 0, 0, .5);
 	border-radius: 28px
 }
 @keyframes click {
@@ -177,16 +177,13 @@ input,button {
 	border:none;
 	outline:none;
 }
-input::-webkit-calendar-picker-indicator {
-	display: none; 
-}
 input:focus::-webkit-input-placeholder {
 	color: rgba(0, 0, 0, 0.1);
 }
 .bar input {
 	border-radius: 50px;
 	border: 1px solid rgba(0, 0, 0, 0.2);
-	background: var(--part-background);
+	background-color: var(--part-background);
 	color: var(--font-color);
 	font-size: 90%;
 	width:100%;
@@ -206,7 +203,7 @@ input:focus::-webkit-input-placeholder {
 	position:absolute;
 	overflow: hidden;
 	border-radius: 10px;
-	background: rgba(0, 0, 0, .0);
+	background-color: transparent;
 }
 .bar button img{
 	width: 100%;
@@ -225,9 +222,9 @@ input:focus::-webkit-input-placeholder {
 	opacity: 0.5;
 	font-size: 18px;
 }
-.bar button,a,a:link,a:visited,a:hover,a:active,a:focus {
+.bar button,a,a:link,a:visited {
 	text-decoration: none;
-	-webkit-tap-highlight-color:transparent; 
+	-webkit-tap-highlight-color:transparent;
 }
 #suggestList {
 	margin:0;
@@ -237,7 +234,7 @@ input:focus::-webkit-input-placeholder {
 	z-index: 6;
 	left:5%;
 	border-radius: 10px;
-	background: var(--part-background);
+	background-color: var(--part-background);
 	box-shadow: rgba(0, 0, 0, 0.05) 0 1px 1px, rgba(0, 0, 0, 0.06) 0 1px 1px;
 	padding: 5px 15px 0 15px;
 }
@@ -262,13 +259,13 @@ input:focus::-webkit-input-placeholder {
 	bottom: 88px;
 	padding: 5px 15px 0 15px;
 	display: none;
-	background: rgba(0, 0, 0, .0);
+	background-color: rgba(0, 0, 0, .0);
 }
 #lishiList li {
 	list-style-type: none;
 	pointer-events: auto;
 	float: left;
-	background: var(--part-background);
+	background-color: var(--part-background);
 	height: 36px;
 	color: #666;
 	font-size: 95%;
@@ -308,7 +305,7 @@ input:focus::-webkit-input-placeholder {
 #close_plus {
 	position: absolute;
 	z-index: 10;
-	background: rgba(0, 0, 0, .0);
+	background-color: rgba(0, 0, 0, .0);
 	width: 100%;
 	height: 20px;
 	Right: 0;
@@ -318,7 +315,7 @@ input:focus::-webkit-input-placeholder {
 	position: absolute;
 	display: none;
 	z-index: 1;
-	background: var(--background-color);
+	background-color: var(--background-color);
 	height: 100%;
 	top: 0;
 	left: 0;
@@ -370,7 +367,7 @@ label::after {
 	position:absolute;
 	width:50px;
 	color: rgba(0, 0, 0, .0);
-	background: rgba(0, 0, 0, .0);
+	background-color: transparent;
 }
 input.text-input {
 	display: block;
@@ -393,7 +390,7 @@ input[type=checkbox] {
 	position: relative;
 	left: 70px;
 	appearance: none;
-	transition: all 100ms;
+	transition: all 100ms ease;
 	border-radius: 31px;
 	width: 60px;
 	height: 30px;
@@ -446,11 +443,11 @@ button {
 	border-radius: 5px;
 	overflow: hidden;
 	position: relative;
-	background: #63c3ff;
+	background-color: #63c3ff;
 	color: #fff;
 }
 button[id="quxiao"] {
-	background: #6fcc6f;
+	background-color: #6fcc6f;
 }
 button:first-child {
 	margin-right: 4%;
@@ -461,11 +458,11 @@ button:first-child {
 	width:40px;
 	right: 0;
 	position:absolute;
-	background: rgba(0, 0, 0, .0);
+	background-color: transparent;
 	-webkit-tap-highlight-color:transparent
 }
 .input_clear p{
-	position:flex;
+	display:flex;
 	margin:0 auto;
 	color: rgba(0, 0, 0, .2);
 	font-size: 20px;
@@ -495,7 +492,7 @@ button:first-child {
 	width: 7px;
 	height: 7px;
 	margin:0 auto;
-	background: var(--background-color);
+	background-color: var(--background-color);
 	border-radius: 15px;
 	opacity: 0.2;
 	box-shadow: rgba(0, 0, 0, 0.25) 0 50px 100px -20px, rgba(0, 0, 0, 0.3) 0 30px 60px -30px, rgba(0, 0, 0, 0.35) 0 -2px 6px 0 inset;
@@ -508,7 +505,7 @@ button:first-child {
 	left: 5%;
 	margin-top: 15px;
 	border-radius: 8px;
-	background: rgba(255, 255, 255, 0.2);
+	background-color: rgba(255, 255, 255, 0.2);
 	box-shadow: rgba(0, 0, 0, 0.4) 0 2px 4px, rgba(0, 0, 0, 0.3) 0 7px 13px -3px, rgba(0, 0, 0, 0.2) 0 -3px 0 inset;
 }
 #month,
@@ -569,7 +566,7 @@ button:first-child {
 	overflow: hidden;
 	display: none;
 	z-index: 0;
-	background: var(--background-color);
+	background-color: var(--background-color);
 	bottom: 40px;
 	top: 4%;
 	left: 2%;
@@ -813,10 +810,15 @@ function 响应高度() {
 		localStorage.setItem(程序名+"顺搜高度", fba.getVar(程序名+'顺搜高度'));
 	}
 }
+let Settings_json;
+function fetch_json() {
+	Settings_json = request(ln + '顺搜_settings.json') || '{}';
+	Settings_json = JSON.parse(Settings_json);
+	return Settings_json
+}
 function get_settings(key, value) {
-	let settings = request(ln + '顺搜_settings.json') || '{}';
-	settings = JSON.parse(settings);
-	return settings[key] || value || "";
+	fetch_json()
+	return Settings_json[key] || value || "";
 }
 function set_settings(key, value) {
 	let settings = request(ln + '顺搜_settings.json') || '{}';
@@ -832,14 +834,15 @@ function Alert(title, text) {
 		})
 	},title)
 }
-let 推送图 = get_settings("push_img");
-let 定义图 = get_settings(程序名+"自定义图片");
+fetch_json()
+let 推送图 = Settings_json["push_img"];
+let 定义图 = Settings_json[程序名+"自定义图片"];
 let 海报图 = Path + '顺搜_海报-'+程序名+ '.jpg';
 let 默认图 = Path + '顺搜_默认图.jpg';
 let 网图缓存 = Path + '顺搜_网图缓存.jpg';
 let PUSH_IMG =	Path + 'PUSH_IMG.jpg';
-let 启用定义 = get_settings(程序名+"启用定义图片");
-let 启用轮播 = get_settings(程序名+"启用轮播");
+let 启用定义 = Settings_json[程序名+"启用定义图片"];
+let 启用轮播 = Settings_json[程序名+"启用轮播"];
 function default_img(SRC) {
 	fba.parseLazyRuleAsync($$$(SRC).lazyRule((默认图) => {
 		if (fileExist(默认图) == false) saveImage('https://ss2.meipian.me/users/74082931/bc70d98c5ff2262e7b324b7c7944e2e7.gif', 默认图);
@@ -948,7 +951,7 @@ function dealImage(base64, w, callback) {
 				imageData.data[i] = 255;
 				imageData.data[i + 1] = 255;
 				imageData.data[i + 2] = 255;
-				imageData.data[i + 3] = 255; 
+				imageData.data[i + 3] = 255;
 			}
 		}
 		ctx.putImageData(imageData, 0, 0);
@@ -1481,6 +1484,7 @@ if(程序名=='青豆') {
 }
 $("#open_set").click(function() {
 	navigator.vibrate([5]);
+	fetch_json()
 	fba.parseLazyRuleAsync($$$().lazyRule(() => {
 		let app_name = getLastRules(40).map(e=>{
 			return e.title
@@ -1493,7 +1497,7 @@ $("#open_set").click(function() {
 			let option = new Option(input[i]);
 			s.options[i] = option;
 		}
-		let mySel = get_settings(程序名+"自定义搜索")
+		let mySel = Settings_json[程序名+"自定义搜索"]
 		if(mySel) $("#app_sel").val(mySel)
 		$('#app_sel').on('change', function(){
 			$("#sousuo").val($('#app_sel').val())
@@ -1502,10 +1506,10 @@ $("#open_set").click(function() {
 		auto_match()
 	}));
 	$('.biaodan').css({"display":"block","animation":"click_in .5s ease"});
-	$("#sousuo").val(get_settings(程序名+"自定义搜索"));
-	$("#tupian").val(get_settings(程序名+"自定义图片"));
-	$("#inject").val(get_settings(程序名+"注入JS"));
-	启用定义 = get_settings(程序名+"启用定义图片")
+	$("#sousuo").val(Settings_json[程序名+"自定义搜索"]);
+	$("#tupian").val(Settings_json[程序名+"自定义图片"]);
+	$("#inject").val(Settings_json[程序名+"注入JS"]);
+	启用定义 = Settings_json[程序名+"启用定义图片"];
 	if (启用定义 ==true && $("#tupian").val().indexOf("http") == 0) {
 		$("#isAdult_2").html("网图轮播");
 		$("#isAdult_2").css("color", "#D06B6C")
@@ -1514,7 +1518,7 @@ $("#open_set").click(function() {
 		$("#isAdult_2").css("color", "#3c9")
 	}
 	$("input[type='checkbox']:eq(0)").prop('checked',启用定义)
-	$("input[type='checkbox']:eq(1)").prop('checked',get_settings(程序名+"启用轮播"))
+	$("input[type='checkbox']:eq(1)").prop('checked',Settings_json[程序名+"启用轮播"])
 	let pic_list = request(SS_Pictures + '顺搜_轮播图.json') || '[]';
 	if (pic_list=='[]') {
 		$("input[type='checkbox']:eq(1)").prop('checked',false)
@@ -1602,8 +1606,8 @@ function 日历() {
 		colorStr += randomArr[Math.ceil(Math.random() * (14 - 0) + 0)];
 		colorStr2 += randomArr[Math.ceil(Math.random() * (8 - 0) + 0)];
 	}
-	$("#today").css({"background":'#'  + colorStr });
-	$("#s1").css({"background":'#'  + colorStr2 });
+	$("#today").css({"background-color":'#'  + colorStr });
+	$("#s1").css({"background-color":'#'  + colorStr2 });
 }
 
 function open_x5(Url, col, title) {
@@ -1713,19 +1717,21 @@ $("#ONE_bg").click(function () {
 var push_tips, push_img, push_url, push_rule;
 function update(Up) {
 	if (request(ln + 'ssts.json') != Up) {
-		if (push_tips) Alert("顺搜更新提示", push_tips);
+		
 		var x5 = request('https://hikerfans.com/weisyr/顺搜.html');
 		//search_bg
 		if (x5.indexOf("search") > 0) {
 			fba.writeFile(ln + '顺搜.html', x5)
 			fba.writeFile(ln + 'ssts.json',Up);
-			Alert("顺搜更新完成", "祝君顺利")
+			if (push_tips) {
+				Alert("顺搜更新提示", push_tips)
+			} else { Alert("顺搜更新完成", "祝君顺利") }
 		} else {
 			Alert("顺搜更新出错", "一切随缘")
 			fba.writeFile(ln + 'ssts.json',Up);
 		}
 		$$$().x5LazyRule(() => {
-			deleteCache("https://hikerfans.com/weisyr/js/file.js")
+			//deleteCache("https://hikerfans.com/weisyr/js/file.js")
 		})
 	}
 }
@@ -1749,7 +1755,7 @@ if (!fba.getVar('X5加载')) {
 	if (localStorage.getItem("日") != Today && nowdays.getHours() > 5 || !localStorage.getItem('ONE_RADIO')) ONE_RADIO(nowDay);
 	fba.putVar('X5加载', '完成')
 }
-try{requestAsync(get_settings(程序名+"注入JS"),(key,html)=>{eval(html);})} catch(e){fba.log("注入的JS有错")}
+try{requestAsync(Settings_json[程序名+"注入JS"],(key,html)=>{eval(html);})} catch(e){fba.log("注入的JS有错")}
 async function weather(){
 	let H5width = window.screen.width;
 	WIDGET = {
@@ -1765,7 +1771,7 @@ async function weather(){
 	  }
 	}
 	requestAsync("https://widget.qweather.net/standard/static/js/he-standard-common.js?v=2.0",(key,html)=>{eval(html)});
-	requestAsync("https://yiketianqi.com/api.php?style=yd&skin=durian&city=" + get_settings('位置'),(key,html)=>{
+	requestAsync("https://yiketianqi.com/api.php?style=yd&skin=durian&city=" + Settings_json['位置'],(key,html)=>{
 		$(".weather").fadeIn("200");
 		$("#weather_info").css({"animation":"天气 2s linear forwards"});
 		$('#weather_info img').attr('src', fba.parseDomForHtml(html, ".weather-icon&&src"));
