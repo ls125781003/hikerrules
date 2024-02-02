@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-<title>顺搜_by顺承天意(2024.2.1)</title>
+<title>顺搜_by顺承天意(2024.2.2)</title>
 <script type="text/javascript">
 let t_begin =new Date().getTime()
 </script>
@@ -651,7 +651,7 @@ button:first-child {
 #wv_1 {
 	position: absolute;
 	display: none;
-	top: 130px;
+	top: 0;
 	bottom: 0;
 	z-index: 1;
 	width: 100%;
@@ -660,7 +660,7 @@ button:first-child {
 	position: absolute;
 	display: none;
 	top: 0;
-	left: 50px;
+	left: 0;
 	z-index: 2;
 	width: 80px;
 	height: 30px;
@@ -834,15 +834,76 @@ function Alert(title, text) {
 		})
 	},title)
 }
+async function 选择() {
+	fba.clearVar("s_q");
+	fba.parseLazyRuleAsync($$$("#noLoading#").lazyRule(() => {
+		const hikerPop = require("https://hikerfans.com/weisyr/js/hikerPop.js");
+		hikerPop.selectCenter({
+			options: ["🔍顺搜", "🥑青豆"],
+			columns: 2,
+			title: "设置选择",
+			click(a) {
+				putVar("s_q", a);
+				//return "toast://你选了" + a;
+			},
+			longClick(a) {
+				return "toast://长按了" + a;
+			}
+		});
+		
+	}), $$$.toString(() => {}));
+	let count=0;
+	var timing = setInterval(()=>{
+		count++;
+		if(count>500){
+			clearInterval(timing);
+		}
+		if (fba.getVar("s_q") === "🔍顺搜") {
+			load_set()
+			clearInterval(timing);
+			fba.clearVar("s_q");
+		} else if (fba.getVar("s_q") === "🥑青豆") {
+			fba.open(JSON.stringify({title:"设置", url:"hiker://page/settingPage#noRefresh##noHistory##noRecordHistory#?rule=青豆"}))
+			clearInterval(timing);
+			fba.clearVar("s_q");
+		}
+	},10);
+}
+function Prompt(text) {
+	$$$(text).x5LazyRule(() => {
+		const hikerPop = require("https://hikerfans.com/weisyr/js/hikerPop.js");
+		hikerPop.inputAutoRow({
+			content: input,
+			title: "地市名",
+			confirm(s1, s2) {
+				let set_settings = (key, value) =>{
+					let settings = request('hiker://files/rules/dzHouse/html/顺搜_settings.json') || '{}';
+					settings = JSON.parse(settings);
+					settings[key] = value;
+					writeFile('hiker://files/rules/dzHouse/html/顺搜_settings.json', JSON.stringify(settings));
+				}
+				if (s1 != null && s1 != '') {
+					set_settings('位置', s1);
+					set_settings("ciryid",getVar('cityid'))
+					refreshPage(true);
+				}
+				return
+			},
+			cancel() {
+				return "toast://取消";
+			}
+		});
+	})
+}
 fetch_json()
 let 推送图 = Settings_json["push_img"];
 let 定义图 = Settings_json[程序名+"自定义图片"];
+let 启用定义 = Settings_json[程序名+"启用定义图片"];
+let 启用轮播 = Settings_json[程序名+"启用轮播"];
+let PUSH_IMG = Path + 'PUSH_IMG.jpg';
 let 海报图 = Path + '顺搜_海报-'+程序名+ '.jpg';
 let 默认图 = Path + '顺搜_默认图.jpg';
 let 网图缓存 = Path + '顺搜_网图缓存.jpg';
-let PUSH_IMG =	Path + 'PUSH_IMG.jpg';
-let 启用定义 = Settings_json[程序名+"启用定义图片"];
-let 启用轮播 = Settings_json[程序名+"启用轮播"];
 function default_img(SRC) {
 	fba.parseLazyRuleAsync($$$(SRC).lazyRule((默认图) => {
 		if (fileExist(默认图) == false) saveImage('https://ss2.meipian.me/users/74082931/bc70d98c5ff2262e7b324b7c7944e2e7.gif', 默认图);
@@ -885,6 +946,7 @@ function confirmAsync(title, tis, func) {
 		} else {Checked = false}
 	},1000);
 }
+
 //上传图片
 const inputButton = document.querySelector("#set_pic");
 const inputFile = document.querySelector("input[type='file']");
@@ -919,7 +981,7 @@ function PreviewImage(fileObj) {
 	}
 }
 //压缩图片
-function dealImage(base64, w, callback) {
+async function dealImage(base64, w, callback) {
 	var newImage = new Image();
 	var quality = 0.3;
 	newImage.src = base64;
@@ -1037,8 +1099,8 @@ function 重启轮播() {
 	}
 }
 //自动匹配图库并压缩
-function auto_match() {
-	fba.parseLazyRuleAsync($$$().lazyRule((SS_Pictures) => {
+async function auto_match() {
+	fba.parseLazyRuleAsync($$$(pictures).lazyRule((SS_Pictures) => {
 		let file = require("https://hikerfans.com/weisyr/js/file.js")
 		let folder = file.getFolder("/storage/emulated/0/Android/data/com.example.hikerview/files/Documents/SS_Pictures/")
 		let file_name = []
@@ -1049,9 +1111,13 @@ function auto_match() {
 			let extention = name.substring(name.lastIndexOf(".") + 1).toLowerCase();
 			if (allowExtention.indexOf(extention) > -1) file_name.push(name);
 			if (file.getPicInfo(item['path']).outHeight > 5000 || (item['size']/1024 > 10240)) To_base64.push(name);
-			if (item['size']/1024 < 2) deleteFile(SS_Pictures + item['name']);
+			if (item['size']/1024 < 2 && allowExtention.indexOf(extention) > -1) deleteFile(SS_Pictures + item['name']);
 		});
-		writeFile(SS_Pictures + '顺搜_轮播图.json', JSON.stringify(file_name));
+		let j0 = JSON.stringify(input).length
+		let j1 = JSON.stringify(file_name.join(',')).length
+		if(j0!=j1) {
+			writeFile(SS_Pictures + '顺搜_轮播图.json', JSON.stringify(file_name));
+		}
 		return {"file_name": file_name, "deal_img": To_base64}
 	},SS_Pictures),$$$.toString(()=>{
 		pictures = JSON.parse(input).file_name;
@@ -1476,14 +1542,7 @@ $("#save").click(() =>{
 	set_settings(程序名+"启用轮播",  启用轮播);
 	加载图片(pic_val)
 })
-if(程序名=='青豆') {
-	$("#open_set").longTap(function(){
-		navigator.vibrate([5]);
-		fba.open(JSON.stringify({title:"设置", url:"hiker://page/settingPage#noRefresh##noHistory##noRecordHistory#?rule=青豆"}))
-	})
-}
-$("#open_set").click(function() {
-	navigator.vibrate([5]);
+function load_set() {
 	fetch_json()
 	fba.parseLazyRuleAsync($$$().lazyRule(() => {
 		let app_name = getLastRules(40).map(e=>{
@@ -1526,6 +1585,14 @@ $("#open_set").click(function() {
 	if ($("#tupian").val()) $(".tupian_clear p").show();
 	if ($("#sousuo").val()) $(".sousuo_clear p").show();
 	if ($("#inject").val()) $(".inject_clear p").show();
+}
+$("#open_set").click(function() {
+	navigator.vibrate([5]);
+	if(程序名=='青豆') {
+		选择()
+	} else {
+		load_set()
+	}
 })
 $("input[type='checkbox']:eq(0)").click(function() {
 	if ($(this).is(':checked') ==true && $("#tupian").val().indexOf("http") == 0) {
@@ -1756,7 +1823,7 @@ if (!fba.getVar('X5加载')) {
 	fba.putVar('X5加载', '完成')
 }
 try{requestAsync(Settings_json[程序名+"注入JS"],(key,html)=>{eval(html);})} catch(e){fba.log("注入的JS有错")}
-async function weather(){
+function weather(){
 	let H5width = window.screen.width;
 	WIDGET = {
 		"CONFIG": {
@@ -1766,30 +1833,29 @@ async function weather(){
 		"background": "1",
 		"dataColor": "FFFFFF",
 		"borderRadius": "15",
-		//"city": get_settings('位置') || '北京',
+		"city": fba.getVar('cityid') || get_settings('cityid'),
 		"key": "39d6eac175ed46fe91cdb4738786b652"
 	  }
 	}
 	requestAsync("https://widget.qweather.net/standard/static/js/he-standard-common.js?v=2.0",(key,html)=>{eval(html)});
-	requestAsync("https://yiketianqi.com/api.php?style=yd&skin=durian&city=" + Settings_json['位置'],(key,html)=>{
-		$(".weather").fadeIn("200");
-		$("#weather_info").css({"animation":"天气 2s linear forwards"});
-		$('#weather_info img').attr('src', fba.parseDomForHtml(html, ".weather-icon&&src"));
-		$('#weather_info a').text(fba.parseDomForHtml(html, "body&&Text").split("℃")[0]+"℃")
-	})
 }
-weather()
+requestAsync("https://v1.yiketianqi.com/api?version=v91&appid=43656176&appsecret=I42og6Lm&city="+Settings_json['位置'],(key,html)=>{
+	let tem= JSON.parse(html);
+	let tem0= tem.data[0]
+	$(".weather").fadeIn("200");
+	$("#weather_info").css({"animation":"天气 2s linear forwards"});
+	$('#weather_info img').attr('src', 'https://xintai.xianguomall.com/skin/durian/'+tem0.wea_img+'.png');
+	$('#weather_info a').text(Settings_json['位置']+tem0.tem+"℃");
+	fba.putVar('cityid', tem.cityid)
+	weather()
+});
 $(".weather").click(() => {
 	$('#he-plugin-standard, #wv_1, #wv_2, #wv_3').css({"display":"block","animation":"slideDownReturn0 .25s linear"});
 	$(".movie").css({"animation":"close .3s linear forwards"});
 })
 $(".weather").on('click', "#wv_2", () => {
-	let city = get_settings('位置') || '北京';
-	city = prompt('输入位置', city);
-	if (city != null && city != '') {
-		set_settings('位置', city);
-		fba.refreshPage(true);
-	}
+	let city = Settings_json['位置'] || '北京';
+	city = Prompt(city);
 })
 $(".weather").on('click', "#wv_3", () => {
 	open_x5("https://caiyunapp.com/wx_share/", '#fullTheme#', '天气雷达');
