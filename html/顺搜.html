@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-<title>顺搜_by顺承天意(2024.2.2)</title>
+<title>顺搜_by顺承天意(2024.2.3)</title>
 <script type="text/javascript">
 let t_begin =new Date().getTime()
 </script>
@@ -633,19 +633,12 @@ button:first-child {
 	display: flex;
 	top: 20px;
 }
-#weather_info img {
-	width: 20px;
-	object-fit: cover;
-	left: 10px;
-	position: absolute;
-	align-items: center;
-}
 #weather_info a {
 	position: absolute;
 	display: inline-block;
-	left: 32px;
+	left: 12px;
 	color: #fff;
-	font-size: 98%;
+	font-size: 100%;
 	text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
 }
 #wv_1 {
@@ -662,8 +655,8 @@ button:first-child {
 	top: 0;
 	left: 0;
 	z-index: 2;
-	width: 80px;
-	height: 30px;
+	width: 150px;
+	height: 40px;
 }
 #wv_3 {
 	position: absolute;
@@ -759,7 +752,6 @@ button:first-child {
 </div>
 <div class="weather">
 	<div id="weather_info">
-		<img>
 		<a></a>
 	</div>
 	<div id='wv_1'></div>
@@ -872,25 +864,27 @@ async function 选择() {
 function Prompt(text) {
 	$$$(text).x5LazyRule(() => {
 		const hikerPop = require("https://hikerfans.com/weisyr/js/hikerPop.js");
+		log(input)
 		hikerPop.inputAutoRow({
-			content: input,
+			hint: input,
 			title: "地市名",
-			confirm(s1, s2) {
+			noAutoSoft: false, //不自动打开输入法
+			confirm(text) {
 				let set_settings = (key, value) =>{
 					let settings = request('hiker://files/rules/dzHouse/html/顺搜_settings.json') || '{}';
 					settings = JSON.parse(settings);
 					settings[key] = value;
 					writeFile('hiker://files/rules/dzHouse/html/顺搜_settings.json', JSON.stringify(settings));
 				}
-				if (s1 != null && s1 != '') {
-					set_settings('位置', s1);
-					set_settings("ciryid",getVar('cityid'))
+				if (text != null && text != '') {
+					set_settings('位置', text);
+					set_settings("cityid",getVar('cityid'))
 					refreshPage(true);
 				}
 				return
 			},
 			cancel() {
-				return "toast://取消";
+				return
 			}
 		});
 	})
@@ -900,6 +894,7 @@ let 推送图 = Settings_json["push_img"];
 let 定义图 = Settings_json[程序名+"自定义图片"];
 let 启用定义 = Settings_json[程序名+"启用定义图片"];
 let 启用轮播 = Settings_json[程序名+"启用轮播"];
+let 位置缓存 = Settings_json['位置'] || "北京";
 let PUSH_IMG = Path + 'PUSH_IMG.jpg';
 let 海报图 = Path + '顺搜_海报-'+程序名+ '.jpg';
 let 默认图 = Path + '顺搜_默认图.jpg';
@@ -946,7 +941,6 @@ function confirmAsync(title, tis, func) {
 		} else {Checked = false}
 	},1000);
 }
-
 //上传图片
 const inputButton = document.querySelector("#set_pic");
 const inputFile = document.querySelector("input[type='file']");
@@ -1784,7 +1778,6 @@ $("#ONE_bg").click(function () {
 var push_tips, push_img, push_url, push_rule;
 function update(Up) {
 	if (request(ln + 'ssts.json') != Up) {
-		
 		var x5 = request('https://hikerfans.com/weisyr/顺搜.html');
 		//search_bg
 		if (x5.indexOf("search") > 0) {
@@ -1839,23 +1832,43 @@ function weather(){
 	}
 	requestAsync("https://widget.qweather.net/standard/static/js/he-standard-common.js?v=2.0",(key,html)=>{eval(html)});
 }
-requestAsync("https://v1.yiketianqi.com/api?version=v91&appid=43656176&appsecret=I42og6Lm&city="+Settings_json['位置'],(key,html)=>{
-	let tem= JSON.parse(html);
-	let tem0= tem.data[0]
+fba.parseLazyRuleAsync($$$(位置缓存).lazyRule(() => {
+	let city = JSON.parse(request('https://weatherapi.market.xiaomi.com/wtr-v3/location/city/search?locale=zh_cn&name='+input))[0];
+	let host = {locationKey: city.key, latitude: city.latitude, longitude: city.longitude}
+	function objToQueryString(obj) {
+		let str = [];
+		for (let p in obj) {
+			if (obj.hasOwnProperty(p)) {
+			str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+			}
+		}
+		return str.join("&");
+	}
+	let weather_Json = JSON.parse(request("https://weatherapi.market.xiaomi.com/wtr-v3/weather/all?isLocated=true&days=1&appKey=weather20151024&sign=zUFJoAR2ZVrDy1vF3D07&alpha=false&isGlobal=false&locale=zh_cn&" + objToQueryString(host)))
+	let tem = weather_Json.current.temperature.value;
+	host.tem=tem+"℃";
+	try{
+		let detail = weather_Json.alerts[0].detail;
+		host.detail= detail;
+	} catch(e){}
+	return host
+}),$$$.toString(()=>{
+	input= JSON.parse(input);
 	$(".weather").fadeIn("200");
 	$("#weather_info").css({"animation":"天气 2s linear forwards"});
-	$('#weather_info img').attr('src', 'https://xintai.xianguomall.com/skin/durian/'+tem0.wea_img+'.png');
-	$('#weather_info a').text(Settings_json['位置']+tem0.tem+"℃");
-	fba.putVar('cityid', tem.cityid)
+	$('#weather_info a').text(位置缓存+' '+input.tem);
+	fba.putVar('cityid', input.locationKey.replace('weathercn:','CN'))
+	if(input.detail) fba.putVar('detail', input.detail)
 	weather()
-});
-$(".weather").click(() => {
+}))
+$("#weather_info").click(() => {
+	if(fba.getVar('detail')) Alert('🚥 气象预警 🚥',fba.getVar('detail'));
+	fba.clearVar("detail");
 	$('#he-plugin-standard, #wv_1, #wv_2, #wv_3').css({"display":"block","animation":"slideDownReturn0 .25s linear"});
 	$(".movie").css({"animation":"close .3s linear forwards"});
 })
 $(".weather").on('click', "#wv_2", () => {
-	let city = Settings_json['位置'] || '北京';
-	city = Prompt(city);
+	Prompt(位置缓存);
 })
 $(".weather").on('click', "#wv_3", () => {
 	open_x5("https://caiyunapp.com/wx_share/", '#fullTheme#', '天气雷达');
