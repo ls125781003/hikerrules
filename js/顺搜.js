@@ -6,7 +6,7 @@ function 顺搜(height, arr) {
 		var 本地 =getPath('hiker://files/rules/dzHouse/html/顺搜.html');
 		if (fileExist(本地) == false) {
 			var 远程x5 = request('https://ghproxy.net/https://raw.githubusercontent.com/ls125781003/hikerdbw/master/顺搜.html');
-			if (远程x5.indexOf("search_bg") > 0) {
+			if (远程x5.indexOf("search") > 0) {
 				writeFile(本地, 远程x5);
 			} else {
 				confirm({
