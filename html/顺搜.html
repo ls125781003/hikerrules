@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-<title>顺搜_by顺承天意(2024.2.3)</title>
+<title>顺搜_by顺承天意(2024.2.5)</title>
 <script type="text/javascript">
 let t_begin =new Date().getTime()
 </script>
@@ -774,7 +774,7 @@ let Today = nowdays.getDate();
 if (Month< 10) Month="0"+Month
 if (Today< 10) Today="0"+Today
 let Festival = Month + "-" + Today;
-let nowDay = Year + "-" + Month + "-" + Today;
+let nowMonth = Year + "-" + Month;
 var input_state = 0;
 var 轮播_state = 0;
 var i = 0;
@@ -812,11 +812,15 @@ function get_settings(key, value) {
 	fetch_json()
 	return Settings_json[key] || value || "";
 }
-function set_settings(key, value) {
+let set_settings = (key, value) =>{
 	let settings = request(ln + '顺搜_settings.json') || '{}';
 	settings = JSON.parse(settings);
 	settings[key] = value;
-	fba.writeFile(ln + '顺搜_settings.json', JSON.stringify(settings));
+	try {
+		fba.writeFile(ln + '顺搜_settings.json', JSON.stringify(settings));
+	} catch(e) {
+		writeFile(ln + '顺搜_settings.json', JSON.stringify(settings));
+	}
 }
 function Alert(title, text) {
 	if (typeof(text) != 'string') text=JSON.stringify(text)
@@ -829,7 +833,7 @@ function Alert(title, text) {
 async function 选择() {
 	fba.clearVar("s_q");
 	fba.parseLazyRuleAsync($$$("#noLoading#").lazyRule(() => {
-		const hikerPop = require("https://hikerfans.com/weisyr/js/hikerPop.js");
+		const hikerPop = $.require("https://hikerfans.com/weisyr/js/hikerPop.js");
 		hikerPop.selectCenter({
 			options: ["🔍顺搜", "🥑青豆"],
 			columns: 2,
@@ -861,33 +865,50 @@ async function 选择() {
 		}
 	},10);
 }
-function Prompt(text) {
-	$$$(text).x5LazyRule(() => {
-		const hikerPop = require("https://hikerfans.com/weisyr/js/hikerPop.js");
-		log(input)
+function Prompt(key, value) {
+	$$$(value).x5LazyRule((Settings_json, set_settings,ln,key) => {
+		this.ln=ln;
+		let info = "取消";
+		let cancel = true;
+		if(key.indexOf("书签")>-1 && Settings_json[key]&&Settings_json[key]!=input) {
+			info = "恢复默认";
+			cancel = false
+		};
+		const hikerPop = $.require("https://hikerfans.com/weisyr/js/hikerPop.js");
 		hikerPop.inputAutoRow({
-			hint: input,
-			title: "地市名",
-			noAutoSoft: false, //不自动打开输入法
+			hint: Settings_json[key] || input,
+			title: key,
+			//okTitle: '确定',
+			cancelTitle: info,
+			hideCancel: cancel,
+			noAutoSoft: false, //自动打开输入法
 			confirm(text) {
-				let set_settings = (key, value) =>{
-					let settings = request('hiker://files/rules/dzHouse/html/顺搜_settings.json') || '{}';
-					settings = JSON.parse(settings);
-					settings[key] = value;
-					writeFile('hiker://files/rules/dzHouse/html/顺搜_settings.json', JSON.stringify(settings));
-				}
 				if (text != null && text != '') {
-					set_settings('位置', text);
-					set_settings("cityid",getVar('cityid'))
-					refreshPage(true);
+					if (key=="位置" || key.indexOf("书签")>-1 && text.indexOf(".")>-1) {
+						set_settings(key, text);
+						refreshPage(true);
+					}
 				}
 				return
 			},
 			cancel() {
+				if (key.indexOf("书签")>-1 && Settings_json[key]!=input) {
+					confirm({
+						title: key,
+						content: "将恢复默认",
+						confirm: $.toString((set_settings, ln, key, input) => {
+							this.ln=ln;
+							set_settings(key, input);
+							refreshPage(true);
+						},set_settings, ln, key, input),
+						cancel: $.toString(() => {
+						})
+					});
+				}
 				return
 			}
 		});
-	})
+	},Settings_json, set_settings,ln,key)
 }
 fetch_json()
 let 推送图 = Settings_json["push_img"];
@@ -1095,7 +1116,7 @@ function 重启轮播() {
 //自动匹配图库并压缩
 async function auto_match() {
 	fba.parseLazyRuleAsync($$$(pictures).lazyRule((SS_Pictures) => {
-		let file = require("https://hikerfans.com/weisyr/js/file.js")
+		let file = $.require("https://hikerfans.com/weisyr/js/file.js")
 		let folder = file.getFolder("/storage/emulated/0/Android/data/com.example.hikerview/files/Documents/SS_Pictures/")
 		let file_name = []
 		let To_base64 = []
@@ -1258,7 +1279,7 @@ function 热片推荐() {
 	$(".input").attr("placeholder", '🔥 ' + name_load);
 }
 热片推荐()
-function 搜索建议(value) {
+var 搜索建议 =(value) =>{
 	requestAsync('https://pbaccess.video.qq.com/trpc.videosearch.smartboxServer.HttpRountRecall/Smartbox',{
 		headers: {
 			"referer": "https://v.qq.com/",
@@ -1675,78 +1696,37 @@ function open_x5(Url, col, title) {
 	let rule = `js:var d=[];d.push({desc:'auto&&float',col_type:'x5_webview_single',url:'${Url}',extra:{canBack:true}});setResult(d)`;
 	fba.open(JSON.stringify({title: title, url:col+"#noRefresh##noHistory##noRecordHistory#hiker://empty", findRule: rule, extra:{newWindow: true,windowId: title}}))
 }
-function H5Mark(t, u) {
-	let bookMark = get_settings(t) || u;
-	bookMark = prompt('输入网址', bookMark);
-	if (bookMark.indexOf(".")>-1 && bookMark != null && bookMark != '') {
-		set_settings(t, bookMark);
-	} else {
-		set_settings(t, u);
-	}
-}
 $("#dayNumber, #month, #s2").click(function () {
 	navigator.vibrate([5]);
-	if($(this).attr('id')=="dayNumber") open_x5(get_settings('功能1') || 'https://m.rili.com.cn/', "#fullTheme#", ' ');
-	if($(this).attr('id')=="month") open_x5(get_settings('功能2') || 'https://m.xingzuo.com/shierxingzuo/', '#fullTheme#', ' ');
-	if($(this).attr('id')=="s2") open_x5(get_settings('功能3') || "https://t.xxgeek.com/tools/mmvod/m.php", "#gameTheme#", " ");
+	if($(this).attr('id')=="dayNumber") open_x5(Settings_json['书签❶'] || 'https://m.rili.com.cn/', "#fullTheme#", ' ');
+	if($(this).attr('id')=="month") open_x5(Settings_json['书签❷'] || 'https://m.xingzuo.com/shierxingzuo/', '#fullTheme#', ' ');
+	if($(this).attr('id')=="s2") open_x5(Settings_json['书签❸'] || "https://t.xxgeek.com/tools/mmvod/m.php", "#gameTheme#", " ");
 })
 $("#dayNumber, #month, #s2").longTap(function () {
 	navigator.vibrate([5]);
-	if($(this).attr('id')=="dayNumber") H5Mark("功能1", "https://m.rili.com.cn/");
-	if($(this).attr('id')=="month") H5Mark("功能2", "https://m.xingzuo.com/shierxingzuo/");
-	if($(this).attr('id')=="s2") H5Mark("功能3", "https://t.xxgeek.com/tools/mmvod/m.php");
+	if($(this).attr('id')=="dayNumber") Prompt("书签❶", "https://m.rili.com.cn/");
+	if($(this).attr('id')=="month") Prompt("书签❷", "https://m.xingzuo.com/shierxingzuo/");
+	if($(this).attr('id')=="s2") Prompt("书签❸", "https://t.xxgeek.com/tools/mmvod/m.php");
 })
-function getLastMonthDate() {
-	var year = nowdays.getFullYear()
-	var month = nowdays.getMonth()
-	if (month == 0) {
-		month = 12
-		year = year - 1
-	}
-	if (month < 10) month = '0' + month
-	var myDate = new Date(year, month, 0)
-	// var startDate = year + '-' + month + '-01 00:00:00' //上个月第一天
-	var endDate = year + '-' + month + '-' + myDate.getDate() //上个月最后一天
-	return endDate
-}
-var ONE_Play
-var j = 0;
+var ONE_Play;
 async function ONE_RADIO(Days) {
-	requestAsync("http://v3.wufazhuce.com:8000/api/channel/one/"+ Days +"/0", {
-		method: 'get',
-		body: {
-			"sign": "d2f78b056e3c0c456271d9eaecff26e3",
-			"version": "5.3.7",
-			"platform": "android"
-		},
-	},(key,html)=>{
-		let Yesterday = Today-1;
-		if (Yesterday< 10) Yesterday="0"+Yesterday
-		LastDay = Year + "-" + Month + "-" + Yesterday;
-		if (Today-1==0) LastDay = getLastMonthDate()
-		if (html=='{"res":0,"msg":"success"}') {
-			if (j < 2) ONE_RADIO(LastDay)
-			j++;
-		} else {
-			//localStorage.setItem('ONE_RADIO', '0')
-			let result = JSON.parse(html).data.content_list.pop();
-			if(result.share_list.wx.audio) {
-				ONE_Play = [{
-					title: result.title,
-					desc: result.share_list.wx.desc,
-					picUrl: result.img_url,
-					url: "#isMusic=true#"+result.share_list.wx.audio,
-					use: true
-				}]
-				if (localStorage.getItem('ONE_RADIO') != JSON.stringify(ONE_Play)) {
-					$(".ONE_radio").css({"display": "block", "animation":"drop .8s ease-in-out forwards"});
-				}
-				//fba.log(JSON.stringify(ONE_Play));
-				localStorage.setItem('ONE_RADIO', JSON.stringify(ONE_Play));
-				localStorage.setItem("日", Today);
-				oneRadio_load();
-			} else { ONE_RADIO(LastDay) }
+	requestAsync("http://v3.wufazhuce.com:8000/api/find/bymonth/8/"+ Days +"?channel=google&sign=6e8ba29ff9b4f73f5484b29da2851d7c&version=5.4.1&uuid=26cc04557a49e331fb8e967e4aee82661&platform=android",(key,html)=>{
+		//localStorage.setItem('ONE_RADIO', '0')
+		let result = JSON.parse(html).data[0]
+		ONE_Play = [{
+			title: result.title,
+			desc: result.share_list.wx.desc,
+			picUrl: result.cover,
+			url: "#isMusic=true#"+result.audio_url,
+			use: true
+		}]
+		if (localStorage.getItem('ONE_RADIO') != JSON.stringify(ONE_Play)) {
+			$(".ONE_radio").css({"display": "block", "animation":"drop .8s ease-in-out forwards"});
 		}
+		//fba.log(JSON.stringify(ONE_Play));
+		localStorage.setItem('ONE_RADIO', JSON.stringify(ONE_Play));
+		localStorage.setItem("日", Today);
+		oneRadio_load();
 	})
 }
 function oneRadio_load() {
@@ -1776,10 +1756,9 @@ $("#ONE_bg").click(function () {
 	}
 })
 var push_tips, push_img, push_url, push_rule;
-function update(Up) {
+async function update(Up) {
 	if (request(ln + 'ssts.json') != Up) {
 		var x5 = request('https://hikerfans.com/weisyr/顺搜.html');
-		//search_bg
 		if (x5.indexOf("search") > 0) {
 			fba.writeFile(ln + '顺搜.html', x5)
 			fba.writeFile(ln + 'ssts.json',Up);
@@ -1791,11 +1770,11 @@ function update(Up) {
 			fba.writeFile(ln + 'ssts.json',Up);
 		}
 		$$$().x5LazyRule(() => {
-			//deleteCache("https://hikerfans.com/weisyr/js/file.js")
+			deleteCache("https://hikerfans.com/weisyr/js/hikerPop.js")
 		})
 	}
 }
-function push(Day) {
+async function push(Day) {
 	if (Festival == Day) {
 		if (推送图 != push_img) {
 			fba.saveImage(push_img, PUSH_IMG);
@@ -1812,7 +1791,7 @@ function push(Day) {
 if (!fba.getVar('X5加载')) {
 	$('.pics_img').css({"animation":"淡入 0.9s linear forwards"});
 	requestAsync("https://hikerfans.com/weisyr/plug/ssts.js",(key,html)=>{eval(html);})
-	if (localStorage.getItem("日") != Today && nowdays.getHours() > 5 || !localStorage.getItem('ONE_RADIO')) ONE_RADIO(nowDay);
+	if (localStorage.getItem("日") != Today && nowdays.getHours() > 5 || !localStorage.getItem('ONE_RADIO')) ONE_RADIO(nowMonth);
 	fba.putVar('X5加载', '完成')
 }
 try{requestAsync(Settings_json[程序名+"注入JS"],(key,html)=>{eval(html);})} catch(e){fba.log("注入的JS有错")}
@@ -1826,40 +1805,58 @@ function weather(){
 		"background": "1",
 		"dataColor": "FFFFFF",
 		"borderRadius": "15",
-		"city": fba.getVar('cityid') || get_settings('cityid'),
+		"city": fba.getVar('cityid') || Settings_json["cityid"],
 		"key": "39d6eac175ed46fe91cdb4738786b652"
 	  }
 	}
 	requestAsync("https://widget.qweather.net/standard/static/js/he-standard-common.js?v=2.0",(key,html)=>{eval(html)});
 }
 fba.parseLazyRuleAsync($$$(位置缓存).lazyRule(() => {
-	let city = JSON.parse(request('https://weatherapi.market.xiaomi.com/wtr-v3/location/city/search?locale=zh_cn&name='+input))[0];
-	let host = {locationKey: city.key, latitude: city.latitude, longitude: city.longitude}
-	function objToQueryString(obj) {
-		let str = [];
-		for (let p in obj) {
-			if (obj.hasOwnProperty(p)) {
-			str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+	try {
+		let city = JSON.parse(request('https://weatherapi.market.xiaomi.com/wtr-v3/location/city/search?locale=zh_cn&name='+input))[0];
+		if(city) {
+			let host = {locationKey: city.key, latitude: city.latitude, longitude: city.longitude}
+			function objToQueryString(obj) {
+				let str = [];
+				for (let p in obj) {
+					if (obj.hasOwnProperty(p)) {
+					str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+					}
+				}
+				return str.join("&");
 			}
+			let weather_Json = JSON.parse(request("https://weatherapi.market.xiaomi.com/wtr-v3/weather/all?isLocated=true&days=1&appKey=weather20151024&sign=zUFJoAR2ZVrDy1vF3D07&alpha=false&isGlobal=false&locale=zh_cn&" + objToQueryString(host)))
+			let tem = weather_Json.current.temperature.value;
+			host.tem=tem+"℃";
+			try{
+				let detail = weather_Json.alerts[0].detail;
+				host.detail= detail;
+			} catch(e){}
+			return host
+		} else {
+			return "warn"
 		}
-		return str.join("&");
+	} catch(e) {
+		return false
 	}
-	let weather_Json = JSON.parse(request("https://weatherapi.market.xiaomi.com/wtr-v3/weather/all?isLocated=true&days=1&appKey=weather20151024&sign=zUFJoAR2ZVrDy1vF3D07&alpha=false&isGlobal=false&locale=zh_cn&" + objToQueryString(host)))
-	let tem = weather_Json.current.temperature.value;
-	host.tem=tem+"℃";
-	try{
-		let detail = weather_Json.alerts[0].detail;
-		host.detail= detail;
-	} catch(e){}
-	return host
 }),$$$.toString(()=>{
-	input= JSON.parse(input);
-	$(".weather").fadeIn("200");
-	$("#weather_info").css({"animation":"天气 2s linear forwards"});
-	$('#weather_info a').text(位置缓存+' '+input.tem);
-	fba.putVar('cityid', input.locationKey.replace('weathercn:','CN'))
-	if(input.detail) fba.putVar('detail', input.detail)
-	weather()
+	if(input.indexOf("latitude") > -1) {
+		input= JSON.parse(input);
+		$(".weather").fadeIn("200");
+		$("#weather_info").css({"animation":"天气 2s linear forwards"});
+		$('#weather_info a').text(位置缓存+' '+input.tem);
+		if(input.detail) fba.putVar('detail', input.detail);
+		let cityid = input.locationKey.replace('weathercn:','CN');
+		fba.putVar('cityid', cityid);
+		if(cityid != Settings_json["cityid"]) set_settings('cityid', cityid);
+		weather()
+	} else if(input=="warn"){
+		set_settings('位置', "北京");
+		$(".weather").fadeIn("200");
+		$('#weather_info a').text("请输入正确的地市名");
+	} else {
+		fba.log('天气获取异常')
+	}
 }))
 $("#weather_info").click(() => {
 	if(fba.getVar('detail')) Alert('🚥 气象预警 🚥',fba.getVar('detail'));
@@ -1868,7 +1865,7 @@ $("#weather_info").click(() => {
 	$(".movie").css({"animation":"close .3s linear forwards"});
 })
 $(".weather").on('click', "#wv_2", () => {
-	Prompt(位置缓存);
+	Prompt("位置", 位置缓存);
 })
 $(".weather").on('click', "#wv_3", () => {
 	open_x5("https://caiyunapp.com/wx_share/", '#fullTheme#', '天气雷达');
