@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-<title>顺搜_by顺承天意(2024.2.5)</title>
+<title>顺搜_by顺承天意(2024.3.20)</title>
 <script type="text/javascript">
 let t_begin =new Date().getTime()
 </script>
@@ -21,7 +21,7 @@ let t_begin =new Date().getTime()
 	--background-color: white;
 	--font-color: black;
 	--part-background: rgba(255, 255, 255, .95);
-	--mask_toTop: linear-gradient(to top, white, rgba(0, 0, 0, .0) 100%);
+	--mask_toTop: linear-gradient(to top, white, transparent 100%);
   }
 }
 @media (prefers-color-scheme: dark) {
@@ -29,7 +29,7 @@ let t_begin =new Date().getTime()
 	--background-color: #1b1b1b;
 	--font-color: rgba(255, 255, 255,.6);
 	--part-background: rgba(22,22,22, .9);
-	--mask_toTop: linear-gradient(to top, #1b1b1b , rgba(0, 0, 0, .0) 100%);
+	--mask_toTop: linear-gradient(to top, #1b1b1b , transparent 100%);
   }
 }
 body {
@@ -345,10 +345,10 @@ label {
 	border-radius: 5px 2px 2px 5px ;
 	line-height:35px;
 }
-#isAdult{
+#isAdult, #isAdult_3{
 	color: #3c9;
 }
-#isAdult_2 {
+#isAdult_2, #isAdult_4 {
 	margin-left: 190px;
 	color: #3c9;
 }
@@ -399,7 +399,7 @@ input[type=checkbox] {
 	margin: 0;
 	display: inline-block;
 }
-#ckeckbox_2{
+#ckeckbox_2, #ckeckbox_4{
 	left: 220px;
 }
 input[type=checkbox]::before {
@@ -617,12 +617,12 @@ button:first-child {
 	bottom: 0;
 	font-size: 120%;
 }
-.weather {
+.weather, .wv-lt-refresh {
 	position: absolute;
 	display: none;
 }
-.wv-lt-refresh, #he-plugin-standard {
-	display: none;
+#he-plugin-standard {
+	/display: none;
 	box-shadow: rgb(0, 0, 0, 0.65) 0 20px 25px -10px;
 }
 #weather_info {
@@ -647,7 +647,7 @@ button:first-child {
 	top: 0;
 	bottom: 0;
 	z-index: 1;
-	width: 100%;
+	width: 100%
 }
 #wv_2 {
 	position: absolute;
@@ -661,11 +661,11 @@ button:first-child {
 #wv_3 {
 	position: absolute;
 	display: none;
-	bottom: 23px;
-	left: 30px;
+	bottom: 20px;
+	left: 20px;
 	z-index: 3;
-	width: 90px;
-	height: 20px;
+	width: 120px;
+	height: 20px
 }
 #gradienter {
 	width: 100%;
@@ -689,16 +689,23 @@ button:first-child {
 			<input type="text" class="text-input" id="tupian" placeholder="点击“图片”选择本地图（留空为默认）" required>
 			<button class="input_clear tupian_clear"><p>×</p></button>
 		</div>
+		
+		<div class="form-item">
+			<label id="isAdult">定义图</label>
+			<label id="isAdult_2">开轮播</label>
+			<input id="ckeckbox" type="checkbox">
+			<input id="ckeckbox_2" type="checkbox">
+		</div>
 		<div class="form-item set">
 			<label id="set_inject">注入</label>
 			<input type="text" class="text-input" id="inject" placeholder="注入JS实现特定功能" required>
 			<button class="input_clear inject_clear"><p>×</p></button>
 		</div>
 		<div class="form-item">
-			<label id="isAdult">定义图</label>
-			<label id="isAdult_2">开轮播</label>
-			<input id="ckeckbox" type="checkbox">
-			<input id="ckeckbox_2" type="checkbox">
+			<label id="isAdult_3">渐变</label>
+			<label id="isAdult_4">边距圆角</label>
+			<input id="ckeckbox_3" type="checkbox">
+			<input id="ckeckbox_4" type="checkbox">
 		</div>
 		<div class="form-item close_set">
 			<button  id="quxiao">
@@ -750,10 +757,10 @@ button:first-child {
 	<p id="title_1"></p>
 	<p id="title_2"></p>
 </div>
+<div id="weather_info">
+	<a></a>
+</div>
 <div class="weather">
-	<div id="weather_info">
-		<a></a>
-	</div>
 	<div id='wv_1'></div>
 	<div id='wv_2'></div>
 	<div id='wv_3'></div>
@@ -802,15 +809,14 @@ function 响应高度() {
 		localStorage.setItem(程序名+"顺搜高度", fba.getVar(程序名+'顺搜高度'));
 	}
 }
-let Settings_json;
-function fetch_json() {
-	Settings_json = request(ln + '顺搜_settings.json') || '{}';
-	Settings_json = JSON.parse(Settings_json);
-	return Settings_json
-}
+var fetch_json = () => {
+	const response = request(ln + '顺搜_settings.json') || '{}';
+	return JSON.parse(response);
+};
+let Settings_json = fetch_json();
 function get_settings(key, value) {
-	fetch_json()
-	return Settings_json[key] || value || "";
+	let settings = fetch_json()
+	return settings[key] || value || "";
 }
 let set_settings = (key, value) =>{
 	let settings = request(ln + '顺搜_settings.json') || '{}';
@@ -846,7 +852,6 @@ async function 选择() {
 				return "toast://长按了" + a;
 			}
 		});
-		
 	}), $$$.toString(() => {}));
 	let count=0;
 	var timing = setInterval(()=>{
@@ -894,8 +899,8 @@ function Prompt(key, value) {
 			cancel() {
 				if (key.indexOf("书签")>-1 && Settings_json[key]!=input) {
 					confirm({
-						title: key,
-						content: "将恢复默认",
+						title: "将“" +key+ "”恢复默认至",
+						content: input,
 						confirm: $.toString((set_settings, ln, key, input) => {
 							this.ln=ln;
 							set_settings(key, input);
@@ -910,11 +915,12 @@ function Prompt(key, value) {
 		});
 	},Settings_json, set_settings,ln,key)
 }
-fetch_json()
 let 推送图 = Settings_json["push_img"];
 let 定义图 = Settings_json[程序名+"自定义图片"];
 let 启用定义 = Settings_json[程序名+"启用定义图片"];
 let 启用轮播 = Settings_json[程序名+"启用轮播"];
+let 启用渐变 = Settings_json[程序名+"渐变"];
+let 边距圆角 = Settings_json[程序名+"边距圆角"];
 let 位置缓存 = Settings_json['位置'] || "北京";
 let PUSH_IMG = Path + 'PUSH_IMG.jpg';
 let 海报图 = Path + '顺搜_海报-'+程序名+ '.jpg';
@@ -1389,8 +1395,8 @@ function 搜索记录 (way, input) {
 	}
 	Refresh_lishi()
 }
-function 大图事件() {
 $("div").delegate('.switch', 'singleTap doubleTap longTap', function (e) {
+	//大图事件
 	if(e.type=="longTap") {
 		navigator.vibrate([5]);
 		let img = localStorage.getItem("大图地址");
@@ -1417,8 +1423,6 @@ $("div").delegate('.switch', 'singleTap doubleTap longTap', function (e) {
 		响应高度()
 	}
 })
-}
-大图事件()
 $("#lishiList").delegate('li p', 'singleTap doubleTap longTap', function (e) {
 	let input = e.target || e.srcElement;
 	input = input.innerHTML
@@ -1495,14 +1499,22 @@ function OPEN(id) {
 			日历()
 			$('.function').css({"display":"block","animation":"slideDownReturn .4s ease"});
 			$('#open_function').css({"animation":"功能开 .3s linear forwards"});
+			if(get_settings(程序名+"天气")==true) {
+				$(".IMG").show("0");
+				$(".IMG").css({"animation":"slideDownReturn0 .4s ease-out"});
+			}
 		} else {
 			$('.function').css({"animation":"spaceOutDown .3s linear"});
 			setTimeout(function () {
 				$(".function").hide();
 			},300)
 			$("#open_set,.weather").fadeIn("200");
-			$('.IMG').css({"animation":"reduce .3s linear "});
-			$('#main_img img').css({"filter": "blur(0)"});
+			if(get_settings(程序名+"天气")==true) {
+				$(".IMG").css({"animation":"close .3s linear forwards"});
+			} else {
+				$('.IMG').css({"animation":"reduce .25s linear "});
+				$('#main_img img').css({"filter": "blur(0)"});
+			}
 			$('#open_function').css({"animation":"功能关 .3s linear forwards"});
 		}
 	}
@@ -1514,7 +1526,7 @@ function CLOSE(id) {
 		$("#search-ok img").attr("src", 'https://hikerfans.com/weisyr/icon/scan.svg');
 	}
 	$(".CLOSE").hide();
-	$("#open_set,.weather").show("200");
+	$("#open_set").show("200");
 	if (input_state==1) {
 		$('.IMG').css({"animation":"reduce .25s linear "});
 		$('#main_img img').css({"filter": "blur(0)"});
@@ -1525,9 +1537,16 @@ function CLOSE(id) {
 		$("#suggestList, #lishiList, .function").hide();
 	},300)
 	if (input_state==1 && 轮播_state==1) 重启轮播()
+	if(get_settings(程序名+"天气")==true) {
+			$(".weather").show("200");
+			$(".IMG").css({"animation":"close .3s linear forwards"});
+		} else {
+			$('.IMG').css({"animation":"reduce .25s linear "});
+			$('#main_img img').css({"filter": "blur(0)"});
+		}
 	if (id=="search_mask" && input_state==0) {
 		oneRadio_load();
-		$(".ONE_radio,.weather").fadeToggle("200");
+		$(".ONE_radio,.weather").fadeToggle("200")
 		$(".ONE_radio p").fadeIn("600");
 		if ($(".ONE_radio").height()> 150 ) {
 			$(".movie").css({"animation":"close .3s linear forwards"});
@@ -1537,7 +1556,7 @@ function CLOSE(id) {
 	input_state=0
 	轮播_state=0
 }
-$("#search-input, #close_plus, #open_function").click(function(){
+$("#search-input, #close_plus, #open_function").click(function() {
 	OPEN($(this).attr('id'))
 })
 $("#input-clear, #search_mask, .CLOSE").click(function() {
@@ -1553,12 +1572,16 @@ $("#save").click(() =>{
 	set_settings(程序名+"注入JS",  inject_js);
 	启用定义 = $("input[type='checkbox']:eq(0)").is(":checked");
 	启用轮播 = $("input[type='checkbox']:eq(1)").is(":checked");
+	启用渐变 = $("input[type='checkbox']:eq(2)").is(":checked");
+	边距圆角 = $("input[type='checkbox']:eq(3)").is(":checked");
 	set_settings(程序名+"启用定义图片",  启用定义);
 	set_settings(程序名+"启用轮播",  启用轮播);
-	加载图片(pic_val)
+	set_settings(程序名+"渐变",  启用渐变);
+	set_settings(程序名+"边距圆角",  边距圆角);
+	加载图片(pic_val);
 })
 function load_set() {
-	fetch_json()
+	Settings_json = fetch_json();
 	fba.parseLazyRuleAsync($$$().lazyRule(() => {
 		let app_name = getLastRules(40).map(e=>{
 			return e.title
@@ -1592,7 +1615,10 @@ function load_set() {
 		$("#isAdult_2").css("color", "#3c9")
 	}
 	$("input[type='checkbox']:eq(0)").prop('checked',启用定义)
-	$("input[type='checkbox']:eq(1)").prop('checked',Settings_json[程序名+"启用轮播"])
+	$("input[type='checkbox']:eq(1)").prop('checked',Settings_json[程序名+"启用轮播"]);
+	启用渐变 = (Settings_json.hasOwnProperty(程序名 + "渐变") && typeof Settings_json[程序名 + "渐变"] === "boolean") ? Settings_json[程序名 + "渐变"] : true;
+	$("input[type='checkbox']:eq(2)").prop('checked',启用渐变);
+	$("input[type='checkbox']:eq(3)").prop('checked',Settings_json[程序名+"边距圆角"]);
 	let pic_list = request(SS_Pictures + '顺搜_轮播图.json') || '[]';
 	if (pic_list=='[]') {
 		$("input[type='checkbox']:eq(1)").prop('checked',false)
@@ -1630,6 +1656,37 @@ $("input[type='checkbox']:eq(1)").click(function() {
 	}
 	if($("#isAdult_2").html()=="本地轮播" && $(this).is(':checked') ==true) {
 	   $("#ckeckbox").prop('checked',false)
+	}
+})
+function 设定样式() {
+	if(启用渐变==false) {
+		$("#mask_toTop").css("background", "transparent");
+	}
+	if(边距圆角==true) {
+		$(".movie").css({"left":"10px", "right":"10px", "border-radius":"18px"});
+	}
+	if(get_settings(程序名+"天气")) {
+		//$("#open_set,.weather").show("200");
+		$(".IMG").css({"animation":"close .3s linear forwards"});
+		$('#he-plugin-standard, #wv_1,#wv_2, #wv_3').css({"display":"block","animation":"slideDownReturn0 .25s linear"})
+	} else {
+		$('#he-plugin-standard, #wv_1, #wv_2, #wv_3').css({"display":"none"});
+		$(".weather").hide("0")
+	}
+}
+设定样式()
+$("input[type='checkbox']:eq(2)").click(function() {
+	if($(this).is(':checked') ==true) {
+		$("#mask_toTop").css("background", "var(--mask_toTop)");
+	} else {
+		$("#mask_toTop").css("background", "transparent");
+	}
+})
+$("input[type='checkbox']:eq(3)").click(function() {
+	if($(this).is(':checked') ==true) {
+		$(".movie").css({"left":"10px", "right":"10px", "border-radius":"18px"});
+	} else {
+		$(".movie").css({"left": "0","right": "0","border-radius": "18px 18px 0 0"});
 	}
 })
 $("#sousuo").bind("keyup",function(event) {
@@ -1691,7 +1748,6 @@ function 日历() {
 	$("#today").css({"background-color":'#'  + colorStr });
 	$("#s1").css({"background-color":'#'  + colorStr2 });
 }
-
 function open_x5(Url, col, title) {
 	let rule = `js:var d=[];d.push({desc:'auto&&float',col_type:'x5_webview_single',url:'${Url}',extra:{canBack:true}});setResult(d)`;
 	fba.open(JSON.stringify({title: title, url:col+"#noRefresh##noHistory##noRecordHistory#hiker://empty", findRule: rule, extra:{newWindow: true,windowId: title}}))
@@ -1801,7 +1857,7 @@ function weather(){
 		"CONFIG": {
 		"layout": "1",
 		"width": H5width-(H5width/100*4),
-		"height": (fba.getVar(程序名+'顺搜高度') || document.documentElement.clientHeight) -47,
+		"height": (fba.getVar(程序名+'顺搜高度') || document.documentElement.clientHeight) -97,
 		"background": "1",
 		"dataColor": "FFFFFF",
 		"borderRadius": "15",
@@ -1849,20 +1905,24 @@ fba.parseLazyRuleAsync($$$(位置缓存).lazyRule(() => {
 		let cityid = input.locationKey.replace('weathercn:','CN');
 		fba.putVar('cityid', cityid);
 		if(cityid != Settings_json["cityid"]) set_settings('cityid', cityid);
-		weather()
+		weather();
 	} else if(input=="warn"){
 		set_settings('位置', "北京");
 		$(".weather").fadeIn("200");
 		$('#weather_info a').text("请输入正确的地市名");
+		Alert('天气位置不对', '请确保输入的地名正确')
 	} else {
 		fba.log('天气获取异常')
 	}
+		$('#he-plugin-standard').css({"display":"block","animation":"slideDownReturn0 .25s linear"});
 }))
 $("#weather_info").click(() => {
 	if(fba.getVar('detail')) Alert('🚥 气象预警 🚥',fba.getVar('detail'));
-	fba.clearVar("detail");
-	$('#he-plugin-standard, #wv_1, #wv_2, #wv_3').css({"display":"block","animation":"slideDownReturn0 .25s linear"});
-	$(".movie").css({"animation":"close .3s linear forwards"});
+	fba.clearVar("detail")
+	$('.weather,#he-plugin-standard, #wv_1, #wv_2, #wv_3').css({"display":"block","animation":"slideDownReturn0 .25s linear"});
+	$(".IMG").css({"animation":"close .3s linear forwards"});
+	$(".weather").show("0");
+	set_settings(程序名+"天气", true)
 })
 $(".weather").on('click', "#wv_2", () => {
 	Prompt("位置", 位置缓存);
@@ -1871,11 +1931,13 @@ $(".weather").on('click', "#wv_3", () => {
 	open_x5("https://caiyunapp.com/wx_share/", '#fullTheme#', '天气雷达');
 })
 $(".weather").on('click', "#wv_1", () => {
-	$('#he-plugin-standard').css({"animation":"close .3s ease-out"});
+	$('#he-plugin-standard, #wv_1, #wv_2, #wv_3').css({"animation":"close .3s ease-out"});
 	setTimeout(function () {
 		$("#he-plugin-standard, #wv_1, #wv_2, #wv_3").hide();
 	},300);
-	$(".movie").css({"animation":"slideDownReturn0 .4s ease-out"});
+	$(".IMG").show("0");
+	$(".IMG").css({"animation":"slideDownReturn0 .4s ease-out"});
+	set_settings(程序名+"天气", false)
 })
 async function file_load() {
 	fba.parseLazyRuleAsync($$$().lazyRule((ln) => {
